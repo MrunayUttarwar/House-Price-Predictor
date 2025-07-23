@@ -1,0 +1,5 @@
+cd desktop
+cd DMW_final
+.\venv\Scripts\Activate
+pip install scikit-learn(if required)
+python -m streamlit run house_price_prediction_app2.py
