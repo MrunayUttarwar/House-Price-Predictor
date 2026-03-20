@@ -3,22 +3,28 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import sys
+from typing import Any
 
 import joblib
 import pandas as pd
 import streamlit as st
 
-# Ensure project root is importable when running `streamlit run app/streamlit_app.py`.
-ROOT_DIR = Path(__file__).resolve().parents[1]
-if str(ROOT_DIR) not in sys.path:
-    sys.path.insert(0, str(ROOT_DIR))
-
-from src.explain import explain_single_prediction
-from src.schema import CATEGORICAL_FEATURES, inference_schema
-
 ARTIFACT_DIR = Path('artifacts')
 MODEL_PATH = ARTIFACT_DIR / 'model.joblib'
 METRICS_PATH = ARTIFACT_DIR / 'metrics.json'
+
+
+def load_project_modules() -> tuple[list[str], Any, Any]:
+    try:
+        from src.explain import explain_single_prediction
+        from src.schema import CATEGORICAL_FEATURES, inference_schema
+    except ModuleNotFoundError:
+        root_dir = Path(__file__).resolve().parents[1]
+        if str(root_dir) not in sys.path:
+            sys.path.insert(0, str(root_dir))
+        from src.explain import explain_single_prediction
+        from src.schema import CATEGORICAL_FEATURES, inference_schema
+    return CATEGORICAL_FEATURES, inference_schema, explain_single_prediction
 
 
 @st.cache_resource
@@ -98,7 +104,7 @@ def metric_card(label: str, value: str) -> None:
     )
 
 
-def build_input_form() -> dict[str, object]:
+def build_input_form(categorical_features: list[str]) -> dict[str, object]:
     inputs: dict[str, object] = {}
     left, right = st.columns(2)
 
@@ -113,7 +119,7 @@ def build_input_form() -> dict[str, object]:
 
     with right:
         st.markdown("#### Amenities")
-        for col in CATEGORICAL_FEATURES:
+        for col in categorical_features:
             if col == 'furnishingstatus':
                 inputs[col] = st.selectbox('Furnishing Status', ['furnished', 'semi-furnished', 'unfurnished'])
             else:
@@ -142,6 +148,7 @@ def main() -> None:
 
     model = load_model()
     metrics = load_metrics()
+    categorical_features, inference_schema, explain_single_prediction = load_project_modules()
     metric_values = metrics.get('metrics', {}) if metrics else {}
     best_model = metrics.get('best_model', 'unknown') if metrics else 'unknown'
 
@@ -171,7 +178,7 @@ def main() -> None:
         metric_card('R2', f"{metric_values.get('r2', 'n/a')}")
 
     st.markdown("### Enter House Features")
-    user_inputs = build_input_form()
+    user_inputs = build_input_form(categorical_features)
 
     if st.button('Predict Price', type='primary', use_container_width=True):
         try:
