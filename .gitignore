@@ -1,0 +1,9 @@
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+mlruns/
+artifacts/*.joblib
+artifacts/*.json
+artifacts/plots/

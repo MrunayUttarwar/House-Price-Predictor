@@ -1,0 +1,9 @@
+data_path: Housing.csv
+target_column: price
+random_state: 42
+test_size: 0.2
+cv_folds: 5
+n_iter_search: 10
+artifact_dir: artifacts
+mlflow_tracking_uri: file:./mlruns
+mlflow_experiment: house-price-regression

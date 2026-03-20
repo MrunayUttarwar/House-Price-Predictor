@@ -1,0 +1,14 @@
+{
+  "area": 7420,
+  "bedrooms": 4,
+  "bathrooms": 2,
+  "stories": 3,
+  "parking": 2,
+  "mainroad": "yes",
+  "guestroom": "no",
+  "basement": "no",
+  "hotwaterheating": "no",
+  "airconditioning": "yes",
+  "prefarea": "yes",
+  "furnishingstatus": "furnished"
+}
