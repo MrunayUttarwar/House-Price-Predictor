@@ -89,15 +89,3 @@ pytest -q
 ```
 
 CI pipeline: `.github/workflows/ci.yml`
-
-## Deployment (Streamlit Cloud)
-1. Push this repository to GitHub.
-2. Create a new app in Streamlit Cloud.
-3. Select `app/streamlit_app.py` as the main file.
-4. Deploy and replace the badge URL above with your real app URL.
-
-## Resume Bullets
-- Built an end-to-end house price prediction system with schema-validated data flow, reproducible training, and deployable inference artifacts.
-- Benchmarked linear and ensemble regressors with hyperparameter tuning; achieved **RMSE 1.32M** and **R2 0.653** on held-out test data.
-- Implemented explainability outputs (feature importance + SHAP summary) and surfaced local prediction drivers in a Streamlit app.
-- Added engineering quality gates with Pytest, Ruff, and GitHub Actions CI for repeatable project validation.

@@ -1,4 +1,0 @@
-pip install -r requirements.txt
-python -m src.train --config configs/train.yaml
-python -m src.predict --input sample_input.json --model-path artifacts/model.joblib
-streamlit run app/streamlit_app.py
