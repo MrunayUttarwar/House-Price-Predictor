@@ -27,6 +27,26 @@ def load_project_modules() -> tuple[list[str], Any, Any]:
     return CATEGORICAL_FEATURES, inference_schema, explain_single_prediction
 
 
+def ensure_artifacts() -> None:
+    if MODEL_PATH.exists() and METRICS_PATH.exists():
+        return
+    st.warning('Model artifacts not found. Running one-time training on startup...')
+    try:
+        try:
+            from src.train import run_training
+        except ModuleNotFoundError:
+            root_dir = Path(__file__).resolve().parents[1]
+            if str(root_dir) not in sys.path:
+                sys.path.insert(0, str(root_dir))
+            from src.train import run_training
+        with st.spinner('Training model and generating artifacts...'):
+            run_training('configs/train.yaml')
+        st.success('Artifacts generated successfully. App is ready.')
+    except Exception as exc:
+        st.error(f'Failed to auto-generate artifacts: {exc}')
+        st.stop()
+
+
 @st.cache_resource
 def load_model():
     return joblib.load(MODEL_PATH)
@@ -142,9 +162,7 @@ def main() -> None:
         unsafe_allow_html=True,
     )
 
-    if not MODEL_PATH.exists():
-        st.error('Model artifact not found. Run: python -m src.train --config configs/train.yaml')
-        return
+    ensure_artifacts()
 
     model = load_model()
     metrics = load_metrics()

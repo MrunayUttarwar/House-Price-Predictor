@@ -66,6 +66,11 @@ python -m src.predict --input sample_input.json --model-path artifacts/model.job
 streamlit run app/streamlit_app.py
 ```
 
+Install development-only tools (CI/lint/test + MLflow extras):
+```bash
+pip install -r requirements-dev.txt
+```
+
 ## Artifacts Produced
 - `artifacts/model.joblib`
 - `artifacts/preprocessor.joblib`
@@ -89,3 +94,7 @@ pytest -q
 ```
 
 CI pipeline: `.github/workflows/ci.yml`
+
+## Streamlit Cloud Notes
+- `runtime.txt` pins Python to `3.11` for cloud compatibility.
+- Deploy main file: `app/streamlit_app.py`.
